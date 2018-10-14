@@ -8,3 +8,8 @@ var Task = function ()
     this.numberOfPages = 0;
     this.rate = 0;
 }
+
+Task.prototype.toString = function()
+{
+    //var stringRepresentation = 
+}
