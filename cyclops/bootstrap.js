@@ -99,30 +99,33 @@ var bootstrap = (function ()
             var me = this;
             $("#add_task").click(function () {
                 me.validateInput();
-                var taskName = $("#task").val();
-                var dueDate = $("#due_date").val();
-                var taskName = $("#task").val();
-                var taskValue = "";
-                var numberOfPages = "";
-                var velocity = "";
-                var taskValueSelection =
+                var task = new Task();
+     
+                task.name = $("#task").val();
+                task.dueDate = $("#due_date").val();
+
+
+                task.velocity =
                         $("#velocity :selected")[0].value;
-                if (taskValueSelection === "task_hours")
+                if (task.velocity === "task_hours")
                 {
-                    taskValue = $("#taskHours").val();
+                    task.hours = $("#taskHours").val();
                 }
 
-                if (taskValueSelection === "task_rate")
+                if (task.velocity === "task_rate")
                 {
-                    numberOfPages = $("#numberOfPages").val();
-                    velocity = $("#taskRate").val();
+                    task.numberOfPages = $("#numberOfPages").val();
+                    task.rate = $("#taskRate").val();
                 }
-                console.log("TaskName = " + taskName);
+                console.log("TaskName = " + task.name);
                 console.log("Due Date = " + dueDate);
                 console.log("taskValueSelection = " + taskValueSelection);
                 console.log("taskValue = " + taskValue);
                 console.log("numberOfPages = " + numberOfPages);
                 console.log("velocity = " + velocity);
+                
+
+                
             });
         }
         ,
