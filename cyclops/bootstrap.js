@@ -14,7 +14,7 @@ var bootstrap = (function ()
         if (!predicate(id))
         {
             error = true;
-            $(id).prev().html(errorMessage+"<br>");
+            $(id).prev().html(errorMessage + "<br>");
         } else
         {
             $(id).prev().html("");
@@ -27,10 +27,10 @@ var bootstrap = (function ()
         validateInput: function () {
             validate("task");
             validate("due_date");
-            validate("value_list", function () {
+            validate("velocity", function () {
                 var taskValueSelection =
-                        $("#value_list :selected")[0].value;
-                return (taskValueSelection !== "task_time"
+                        $("#velocity :selected")[0].value;
+                return (taskValueSelection !== "task_hours"
                         && taskValueSelection
                         !== "task_rate") ? false : true;
             });
@@ -39,17 +39,17 @@ var bootstrap = (function ()
             {
                 return !isNaN($(id).val());
             }
-            if (!validate("taskValue"))
+            if (!validate("taskHours"))
             {
-                validate("taskValue", isNumber, "Must be a number");
+                validate("taskHours", isNumber, "Must be a number");
             }
             if (!validate("numberOfPages"))
             {
                 validate("numberOfPages", isNumber, "Must be a number");
             }
-            if (!validate("velocity"))
+            if (!validate("taskRate"))
             {
-                validate("velocity", isNumber, "Must be a number");
+                validate("taskRate", isNumber, "Must be a number");
             }
         },
         initDueDatePicker: function ()
@@ -61,31 +61,33 @@ var bootstrap = (function ()
         ,
         initTaskValueSelectionBox: function ()
         {
-            $("#value_list").change(function () {
-                var taskValue = $("#value_list :selected")[0].value;
+            $("#velocity").change(function () {
+                $("#velocity").prev().html("");
+                var taskValue = $("#velocity :selected")[0].value;
                 var html = "";
                 switch (taskValue)
                 {
-                    case "task_time":
+                    case "task_hours":
                         html =
-                                "<label for=\"taskValue\">Task Value(hrs):</label><br>";
+                                "<label for=\"taskHours\">Hours:</label><br>";
                         html +=
                                 "<span class=\"errorMessage\"></span>";
                         html +=
-                                "<input type=\"text\" name=\"taskValue\" id=\"taskValue\">";
+                                "<input type=\"text\" name=\"taskHours\" id=\"taskHours\">";
                         break;
                     case "task_rate":
-                        html = "<label for=\"numberOfPages\">Pages:</label><br>";
+                        html =
+                                "<label for=\"numberOfPages\">Pages:</label><br>";
                         html +=
                                 "<span class=\"errorMessage\"></span>";
                         html +=
                                 "<input type=\"text\" name=\"numberOfPages\" id=\"numberOfPages\"><br>";
                         html +=
-                                "<label for=\"velocity\">Velocity (pages/hr):</label><br>";
+                                "<label for=\"taskRate\">Rate (pages/hr):</label><br>";
                         html +=
                                 "<span class=\"errorMessage\"></span>";
                         html +=
-                                "<input type=\"text\" name=\"velocity\" id=\"velocity\">";
+                                "<input type=\"text\" name=\"taskRate\" id=\"taskRate\">";
                         break;
                 }
                 $("#valueSelection").html(html);
@@ -104,16 +106,16 @@ var bootstrap = (function ()
                 var numberOfPages = "";
                 var velocity = "";
                 var taskValueSelection =
-                        $("#value_list :selected")[0].value;
-                if (taskValueSelection == "task_time")
+                        $("#velocity :selected")[0].value;
+                if (taskValueSelection === "task_hours")
                 {
-                    taskValue = $("#taskValue").val();
+                    taskValue = $("#taskHours").val();
                 }
 
                 if (taskValueSelection === "task_rate")
                 {
                     numberOfPages = $("#numberOfPages").val();
-                    velocity = $("#velocity").val();
+                    velocity = $("#taskRate").val();
                 }
                 console.log("TaskName = " + taskName);
                 console.log("Due Date = " + dueDate);
