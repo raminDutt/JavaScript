@@ -1,6 +1,7 @@
 "use strict";
 var Task = function ()
 {
+    //taskID would be nice
     this.name = "Poffy";
     this.dueDate = "";
     this.velocity = 0;
@@ -9,7 +10,9 @@ var Task = function ()
     this.rate = 0;
 }
 
-Task.prototype.toString = function()
+Task.prototype.toString = function ()
 {
-    //var stringRepresentation = 
+    var toString = this.name + "~" + this.dueDate + "~" + this.velocity + "~"
+            + this.hours + "~" + this.numberOfPages + "~" + this.rate;
+    return toString;
 }

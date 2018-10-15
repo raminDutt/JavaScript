@@ -54,7 +54,7 @@ input, select{
 
 .ui-tabs-vertical .ui-tabs-nav li { 
     clear: left;
-    width: 100%;
+    width: 10em;
     border-bottom-width: 1px !important; 
     border-right-width: 0 !important;
     margin: 0 -1px .2em 0;

@@ -10,10 +10,10 @@ var bootstrap = (function ()
         };
         errorMessage = errorMessage || "Required";
 
-        var error = false;
+        var error = true;
         if (!predicate(id))
         {
-            error = true;
+            error = false;
             $(id).prev().html(errorMessage + "<br>");
         } else
         {
@@ -22,41 +22,57 @@ var bootstrap = (function ()
         return error;
     }
 
+    var initTabs = function () {
 
+        $("#tabs").tabs().addClass(
+                "ui-tabs-vertical ui-helper-clearfix");
+        $("#tabs li").removeClass("ui-corner-top").addClass(
+                "ui-corner-left");
+
+    }
 
     var validateInput = function () {
-        validate("task");
-        validate("due_date");
-        validate("velocity", function () {
-            var taskValueSelection =
-                    $("#velocity :selected")[0].value;
-            return (taskValueSelection !== "task_hours"
-                    && taskValueSelection
+        var error = true;
+        error = validate("task") && error;
+        error = validate("due_date") && error;
+        var velocity =
+                $("#velocity :selected")[0].value;
+        error = validate("velocity", function () {
+            return (velocity !== "task_hours"
+                    && velocity
                     !== "task_rate") ? false : true;
-        });
+        }) && error;
 
         var isNumber = function (id)
         {
             return !isNaN($(id).val());
         }
-        if (!validate("taskHours"))
+
+        if (velocity === "task_hours")
         {
-            validate("taskHours", isNumber, "Must be a number");
+            error = validate("taskHours") ? validate("taskHours", isNumber,
+                    "Must be a number") && error : false;
         }
-        if (!validate("numberOfPages"))
+
+        if (velocity === "task_rate")
         {
-            validate("numberOfPages", isNumber, "Must be a number");
+            error = validate("numberOfPages") ? validate("numberOfPages",
+                    isNumber,
+                    "Must be a number") && error : false;
+
+            error = validate("taskRate") ? validate("taskRate", isNumber,
+                    "Must be a number") && error : false;
         }
-        if (!validate("taskRate"))
-        {
-            validate("taskRate", isNumber, "Must be a number");
-        }
+        return error;
+
     }
     var initDueDatePicker = function ()
     {
         $("#due_date").datepicker({
             minDate: new Date(),
+            firstDay: 1
         });
+
     }
 
     var initTaskValueSelectionBox = function ()
@@ -97,9 +113,8 @@ var bootstrap = (function ()
     var initAddTaskButton = function ()
     {
         $("#add_task").click(function () {
-            console.log(this);
-            console.log(me);
-            validateInput();
+            if (!validateInput())
+                return;
             var task = new Task();
 
             task.name = $("#task").val();
@@ -116,6 +131,7 @@ var bootstrap = (function ()
                 task.numberOfPages = $("#numberOfPages").val();
                 task.rate = $("#taskRate").val();
             }
+            controller.addTask(task);
         });
     }
 
@@ -154,10 +170,10 @@ var bootstrap = (function ()
     return {
         init: function ()
         {
-            console.log(this);
             initDueDatePicker();
             initTaskValueSelectionBox();
             initAddTaskButton();
+            initTabs();
             initWeekAndTaskTab();
         }
     }
