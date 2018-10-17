@@ -26,7 +26,8 @@ var taskFormInput = (function () {
         load: function (selector)
         {
             var taskFormHtml = "<h1>Task Manager</h1>";
-            taskFormHtml += "<div id=\"taskForm\">";
+            selector.html(taskFormHtml);
+            taskFormHtml = "<div id=\"taskForm\">";
             taskFormHtml += "<label for=\task\">Task:</label><br>";
             taskFormHtml += "<span class=\"errorMessage\"></span>";
             taskFormHtml +=
@@ -49,7 +50,7 @@ var taskFormInput = (function () {
             taskFormHtml +=
                     "<input type=\"button\" name=\"clear_tasks\" id=\"clear_tasks\" value=\"Clear Tasks\">";
             taskFormHtml += "</div>"
-            selector.html(taskFormHtml);
+            selector.last().after(taskFormHtml);
 
         },
         validateInput: function () {

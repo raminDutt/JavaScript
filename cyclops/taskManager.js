@@ -3,8 +3,9 @@
 (function ($) {
     $.fn.taskManager = function () {
 
-        bootstrap.initializeHandlers()
         bootstrap.load($(this));
+        bootstrap.initializeHandlers()
+        
     }
 }
 )(jQuery);

@@ -1,29 +1,34 @@
 "use strict"
 var panel = (function () {
-    var calculateDueWeek = function (dueDate)
-    {
-        //TODO: set option in plugin to modify first day
-        //var firstDay = $( "#due_date" ).datepicker( "option", "firstDay" );
-        var dueDate = new Date(dueDate);
-        var dueWeek = new Date(dueDate);
-
-        dueWeek.setDate(dueWeek.getDate() + (7 - dueWeek.getDay()) % 7);
-        return dueWeek;
-    }
 
     return {
+        nextId: function () {
+            var nextId = $("#tabs > div").map(function () {
+                var id = $(this).attr("id") || "#week-0";
+                var seq = parseInt(id.slice(5, id.length))
+                return seq;
+            }).get().reduce(function (max, currentValue) {
+                return max > currentValue ? max : currentValue;
+            }) + 1;
+            return nextId;
+        },
+        addPanel: function (selector) {
+            var panelHtml = "<div id=\"tabs\"><\div>";
+            selector.last().after(panelHtml);
+        },
+        //to be removed
+        loadTabs: function (selector, tasks) {
 
-        initTabs: function (tasks) {
-
-            var that = this;
+            var me = this;
             tasks.forEach(function (task) {
-                that.addTabs(task);
+                me.addWeekTab(task);
             });
             this.initJqueryTabs();
             this.initWeekAndTaskTab();
 
         },
         initJqueryTabs: function () {
+
             $("#tabs").tabs().addClass(
                     "ui-tabs-vertical ui-helper-clearfix");
             $("#tabs li").removeClass("ui-corner-top").addClass(
@@ -32,10 +37,8 @@ var panel = (function () {
         reloadTabs: function () {
             $("#tabs").tabs("refresh");
         },
-
-        addTabs: function (task)
+        isWeekTabAlreadyCreated: function (dueWeekDay)
         {
-            var dueWeekDay = calculateDueWeek(task.dueDate);
             var weekTab = $("#tabs > ul li a").filter(function () {
                 var date = new Date($(this).text());
                 return date.getTime() === dueWeekDay.getTime() ? true
@@ -43,22 +46,37 @@ var panel = (function () {
             }).get();
 
             if (weekTab.length !== 0)
-                return;
+            {
+                return {
+                    isPresent: true,
+                    id: $(weekTab[0]).attr("href").slice(6)
+                };
+            } else
+            {
+                return false;
+            }
+        },
+        createWeekTab: function (dueWeekDay, id)
+        {
 
-            //only create a new week tab if that week has not been generated
-            var divId = $("#tabs > div").map(function () {
-                var id = $(this).attr("id");
-                var seq = parseInt(id.slice(5, id.length))
-                return seq;
-            }).get().reduce(function (max, currentValue) {
-                return max > currentValue ? max : currentValue;
-            }) + 1;
-
-            var htmlLink = "<li><a href=\"#week-" + divId + "\">"
+            var htmlLink = "<li><a href=\"#week-" + id + "\">"
                     + dueWeekDay.toDateString()
-                    + "</a></li>"
+                    + "</a></li>";
 
+            var html = "<div id=\"week-" + id + "\">";
+            html += "<h2>Stats Tab + Task Tab</h2>";
+            html += "<p>coming soon</p>"
+            html += "</div>";
 
+            if ($("#tabs > ul li").length === 0)
+            {
+                htmlLink = "<ul>" + htmlLink + "</ul>";
+                $("#tabs").html(htmlLink);
+                $("#tabs > ul").after(html);
+                return;
+            }
+
+            
             /*var insertionNode = $("#tabs > ul li").get().reduce(function (
              lowerBoundary, upperBoundary) {
              var lbDate = new Date($(lowerBoundary).text());
@@ -74,6 +92,7 @@ var panel = (function () {
              });*/
 
             var sortedArrayOfLinks = $("#tabs > ul li").get();
+
             var insertionNode;
             var index = 0;
             while (index < sortedArrayOfLinks.length)
@@ -84,7 +103,8 @@ var panel = (function () {
                     $(insertionNode).after(htmlLink);
                     break;
                 }
-                var lowerBoundaryDate = new Date($(sortedArrayOfLinks[index]).
+                var lowerBoundaryDate = new Date($(
+                        sortedArrayOfLinks[index]).
                         text());
                 var nextIndex = index + 1;
                 var upperBoundaryDate = new Date($(
@@ -105,14 +125,9 @@ var panel = (function () {
                 index++;
             }
 
-            // $("#tabs > ul li:last").after(htmlLink);
-            
-            var html = "<div id=\"week-" + divId + "\">";
-            html += "<h2>Stats Tab + Task Tab</h2>";
-            html += "<p>coming soon</p>"
-            html += "</div>"
+
             $("#tabs > div:last").after(html);
-            //this.reloadTabs();
+
         },
         initWeekAndTaskTab: function ()
         {

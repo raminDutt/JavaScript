@@ -8,7 +8,7 @@ var Task = function ()
     this.hours = 0;
     this.numberOfPages = 0;
     this.rate = 0;
-}
+};
 
 Task.prototype.toString = function ()
 {
@@ -20,7 +20,7 @@ Task.prototype.toString = function ()
     toString += "rate = " + this.rate + "\n";
 
     return toString;
-}
+};
 
 Task.prototype.getState = function ()
 {
@@ -32,7 +32,7 @@ Task.prototype.getState = function ()
     data["numberOfPages"] = this.numberOfPages;
     data["rate"] = this.rate;
     return data;
-}
+};
 
 Task.prototype.setState = function (data)
 {
@@ -43,11 +43,9 @@ Task.prototype.setState = function (data)
     this.hours = data["hours"];
     this.numberOfPages = data["numberOfPages"];
     this.rate = data["rate"];
-    return task;
-
-}
+};
 
 Task.prototype.save = function()
 {
     persistenceDAO.save(this.getState())
-}
+};
