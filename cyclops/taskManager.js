@@ -2,7 +2,9 @@
 
 (function ($) {
     $.fn.taskManager = function () {
-        bootstrap.init();
+
+        bootstrap.initializeHandlers()
+        bootstrap.load($(this));
     }
 }
 )(jQuery);

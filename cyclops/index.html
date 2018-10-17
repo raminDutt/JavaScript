@@ -6,8 +6,15 @@
         <link rel="stylesheet" href="task_list.css">
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+        <script src="persistenceDAO.js"></script>
         <script src="tasks.js"></script>
+        <script src="panel.js"></script>
+        <script src="taskFormInput.js"></script>        
         <script src="controller.js"></script>
+        <script src="taskFormInputHandlers.js"></script>
+        <script src="panelHandlers"></script>
         <script src="bootstrap.js"></script>
         <script src="taskManager.js"></script>
         <script src="main.js"></script>
@@ -24,69 +31,66 @@
 
     <body>
         <main>
-            <h1>Task Manager</h1>
             <div id="taskManager"></div>
             <div id="tabs">
                 <ul>                    
+                    <li><a href="#week-3">9/30/2018</a></li>
                     <li><a href="#week-1">10/7/2018</a></li>
                     <li><a href="#week-2">10/14/2018</a></li>
-                    <li><a href="#week-3">9/30/2018</a></li>
                 </ul>
                 <div id="week-1">
-                    <div id="week">
-                        <ul>
-                            <li><a id= "weekStats" href="#week-stats">Week Stats</a></li>
-                            <li><a id= "weekTasks" href="#week-tasks">Tasks</a></li>
-                        </ul>
-                        <div id="week-stats">
-                            <table>
-                                <tr>
-                                    <th>Firstname</th>
-                                    <th>Lastname</th> 
-                                    <th>Age</th>
-                                </tr>
-                                <tr>
-                                    <td>Jill</td>
-                                    <td>Smith</td>
-                                    <td>50</td>
-                                </tr>
-                                <tr>
-                                    <td>Eve</td>
-                                    <td>Jackson</td>
-                                    <td>94</td>
-                                </tr>
-                                <tr>
-                                    <td>John</td>
-                                    <td>Doe</td>
-                                    <td>80</td>
-                                </tr>
-                            </table>
-                            <br>
-                        </div>
-                        <div id="week-tasks" >
-                            <table id="t01">
-                                <tr>
-                                    <th>Firstname</th>
-                                    <th>Lastname</th> 
-                                    <th>Age</th>
-                                </tr>
-                                <tr>
-                                    <td>Jill</td>
-                                    <td>Smith</td>
-                                    <td>50</td>
-                                </tr>
-                                <tr>
-                                    <td>Eve</td>
-                                    <td>Jackson</td>
-                                    <td>94</td>
-                                </tr>
-                                <tr>
-                                    <td>John</td>
-                                    <td>Doe</td>
-                                    <td>80</td>
-                                </tr>
-                            </table>
-                        </div>
+                    <ul>
+                        <li><a id= "weekStatsLink-1" href="#weekStatsLink-1">Week Stats</a></li>
+                        <li><a id= "weekTasksLink-1" href="#weekTasksLink-1">Tasks</a></li>
+                    </ul>
+                    <div id="weekStatsTable-1">
+                        <table>
+                            <tr>
+                                <th>Firstname</th>
+                                <th>Lastname</th> 
+                                <th>Age</th>
+                            </tr>
+                            <tr>
+                                <td>Jill</td>
+                                <td>Smith</td>
+                                <td>50</td>
+                            </tr>
+                            <tr>
+                                <td>Eve</td>
+                                <td>Jackson</td>
+                                <td>94</td>
+                            </tr>
+                            <tr>
+                                <td>John</td>
+                                <td>Doe</td>
+                                <td>80</td>
+                            </tr>
+                        </table>
+                        <br>
+                    </div>
+                    <div id="weekTaskTable-1" >
+                        <table id="t01">
+                            <tr>
+                                <th>Firstname</th>
+                                <th>Lastname</th> 
+                                <th>Age</th>
+                            </tr>
+                            <tr>
+                                <td>Jill</td>
+                                <td>Smith</td>
+                                <td>50</td>
+                            </tr>
+                            <tr>
+                                <td>Eve</td>
+                                <td>Jackson</td>
+                                <td>94</td>
+                            </tr>
+                            <tr>
+                                <td>John</td>
+                                <td>Doe</td>
+                                <td>80</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 <div id="week-2">
@@ -99,24 +103,7 @@
                     <p>As she does this, an older man — username SuperDad64 — provides narration over voice chat as he scavenges for supplies elsewhere on the map: “If the Democrats win, they will basically be able to stop, sort of, the climate policies of Trump.”Abruptly, a young boy interrupts. He’s focused on the game, specifically a llama nearby that contains useful supplies. “If any — um, don’t… don’t open the llama just yet!” he says. “I know a bug where if you use a shockwave grenade on it, you can double everything that’s inside it.” Another boyish voice agrees. SuperDad64, heading out into the storm to find the elusive llama, talks about congressional politics and midterms as he does so.</p>
                 </div>
             </div>
-            <div id="taskForm">
-                <label for="task">Task:</label><br>
-                <span class="errorMessage"></span>
-                <input type="text" name="task" id="task" ><br>
-                <label for="due_date">Due Date:</label><br>
-                <span class="errorMessage"></span>
-                <input type="text" name="due_date" id="due_date"><br>
-                <label for="velocity">Velocity:</label><br>
-                <span class="errorMessage"></span>
-                <select name="velocity" id="velocity">
-                    <option disabled selected>Please select the velocity</option>
-                    <option value="task_hours">Hours</option>
-                    <option value="task_rate">Rate</option>
-                </select><br>
-                <div id="valueSelection"></div><br>
-                <input type="button" name="add_task" id="add_task" value="Add Task"><br>
-                <input type="button" name="clear_tasks" id="clear_tasks" value="Clear Tasks">
-            </div>
+
             <div class="clear"></div>
         </main> 
     </body>
