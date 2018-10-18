@@ -4,7 +4,8 @@ var bootstrap = {
     initializeHandlers: function ()
     {
         taskFormInputHandlers.initializeHandlers();
-        //panelHandlers.initializeHandlers();
+        panelHandlers.initializeHandlers();
+        
 
     },
     load: function (selector)

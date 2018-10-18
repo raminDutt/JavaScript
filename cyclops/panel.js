@@ -63,10 +63,9 @@ var panel = (function () {
                     + dueWeekDay.toDateString()
                     + "</a></li>";
 
-            var html = "<div id=\"week-" + id + "\">";
-            html += "<h2>Stats Tab + Task Tab</h2>";
-            html += "<p>coming soon</p>"
-            html += "</div>";
+            var html = "<div id=\"week-" + id + "\"></div>";
+
+
 
             if ($("#tabs > ul li").length === 0)
             {
@@ -76,7 +75,7 @@ var panel = (function () {
                 return;
             }
 
-            
+
             /*var insertionNode = $("#tabs > ul li").get().reduce(function (
              lowerBoundary, upperBoundary) {
              var lbDate = new Date($(lowerBoundary).text());
@@ -129,37 +128,34 @@ var panel = (function () {
             $("#tabs > div:last").after(html);
 
         },
-        initWeekAndTaskTab: function ()
+        createTaskTab: function (id)
         {
-            $("[id|='weekStatsLink']").click(function () {
-                $("[id|='weekStatsTable']").removeClass("hide");
-                $("[id|='weekTaskTable']").addClass("hide");
-            });
+            var taskTabHtmlLink =
+                    "<ul><li><a id= \"weekTasksLink-1\" href=\"#weekTasksLink-"
+                    + id
+                    + "\">Tasks</a></li></ul>";
+            var taskTabHtmlTable = "<div id=\"weekTaskTable-" + id + "\">";
+            taskTabHtmlTable += "<table id=\"t01\"><tr><th>TaskName</th><th>Due Date</th>"
+                    + "<th>Pages</th><th>Rate</th><th>Hours</th><th>Status</th></tr></table></div>";
 
-            $("[id|='weekTasksLink']").click(function () {
-                $("[id|='weekTaskTable']").removeClass("hide");
-                $("[id|='weekStatsTable']").addClass("hide");
-            });
+            $("#week-" + id).html(taskTabHtmlLink);
+            $("#week-" + id).children().last().after(taskTabHtmlTable);
 
-            $("tr").click(function ()
-            {
-                var isRowSelected = $(this).attr("class") || "";
-                if (isRowSelected === "")
-                {
-                    $("tr").removeClass("rowSelected");
-                    $(this).addClass("rowSelected");
-                } else
-                {
-                    $(this).toggleClass("rowSelected");
-                }
+        },
+        createStatsTab: function (id) {
 
-                //save row Info
-            });
+            var statTabHtmlLink =
+                    "<li><a id= \"weekStatsLink-1\" href=\"#weekStatsLink-"
+                    + id + "\">Week Stats</a></li>";
 
-            //Initial Load should display only week stats of latest week
-            $("[id|='weekStatsTable']").removeClass("hide");
-            $("[id|='weekTaskTable']").addClass("hide");
+            var statTabHtmlTable = "<div id=\"weekStatsTable-" + id + "\">";
+            statTabHtmlTable +=
+                    "<table><tr><th>Week</th><th>Capacity</th><th>Total Work Done</th>"
+                    + "<th>Productivity</th></tr></table></div>";
+            $("#week-" + id + " ul").children().after(statTabHtmlLink);
+            $("#week-" + id).children().last().after(statTabHtmlTable);
         }
+
 
     }
 })();

@@ -4,7 +4,7 @@
     $.fn.taskManager = function () {
 
         bootstrap.load($(this));
-        bootstrap.initializeHandlers()
+        bootstrap.initializeHandlers();
         
     }
 }

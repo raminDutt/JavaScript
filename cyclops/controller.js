@@ -47,14 +47,15 @@ var controller = (function () {
             {
                 var id = panel.nextId();
                 panel.createWeekTab(dueWeekDay, id);
+                panel.createTaskTab(id);
+                panel.createStatsTab(id);
 
             } else
             {
   
             }
         });
-        //create weekly tabs
-        //panel.createWeekTab(task);
+
         //create divs and table for stats
         //create divs and table for task
         //add task + and update productivity
