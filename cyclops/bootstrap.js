@@ -1,18 +1,26 @@
 "use strict";
-var bootstrap = {
+var bootstrap = (function(){
 
-    initializeHandlers: function ()
+    var initializeHandlers = function ()
     {
         taskFormInputHandlers.initializeHandlers();
         panelHandlers.initializeHandlers();
         
 
-    },
-    load: function (selector)
-    {
-        controller.load(selector);
     }
-}
+    var load = function ($)
+    {
+        controller.load($);
+    }
+    
+    return {
+        start: function($)
+        {
+            load($);
+            initializeHandlers();            
+        }
+    }
+})();
 
 
 
