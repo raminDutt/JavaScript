@@ -8,7 +8,7 @@ var Task = function ()
     this.velocity = 0;
     this.hours = 0;
     this.numberOfPages = 0;
-    this.rate = 1;
+    this.rate = 0;
     this.status = "Not Started";
 };
 

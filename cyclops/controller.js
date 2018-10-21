@@ -1,12 +1,12 @@
 "use strict";
 var controller = (function () {
 
-    var calculateDueWeek = function (task)
+    var calculateDueWeek = function (dueDate)
     {
         //TODO: set option in plugin to modify first day
         //var firstDay = $( "#due_date" ).datepicker( "option", "firstDay" );
-        var dueDate = new Date(task.dueDate);
-        var dueWeek = new Date(dueDate);
+        var dD = new Date(dueDate);
+        var dueWeek = new Date(dD);
 
         dueWeek.setDate(dueWeek.getDate() + (7 - dueWeek.getDay()) % 7);
         return dueWeek;
@@ -23,7 +23,7 @@ var controller = (function () {
     };
 
     var addTask = function (task) {
-        var dueWeekDay = calculateDueWeek(task);
+        var dueWeekDay = calculateDueWeek(task.dueDate);
         var answer = panel.isWeekTabAlreadyCreated(dueWeekDay);
         var id = answer.id;
         if (!answer.isPresent)
@@ -42,27 +42,38 @@ var controller = (function () {
     var loadPanel = function (selector)
     {
         var tasks = persistenceDAO.getAllTasks();
-        tasks = tasks.map(function (data) {
-            var task = new Task();
-            task.setState(data);
-            return task;
-        });
-
-        tasks.sort(function (task1, task2) {
-            if (task1.dueDate < task2.dueDate)
-                return -1;
-
-            if (task1.dueDate > task2.dueDate)
-                return 1;
-            return 0;
-        });
 
         panel.createPanel(selector);
-        var weeklyTasks = [];
-        tasks.forEach(function (task)
+        if (tasks.length === 0)
         {
-            addTask(task);
-        });
+            var dueWeekDay = calculateDueWeek(new Date());
+            id = panel.nextId();
+            panel.createWeekTab(dueWeekDay, id);
+            panel.createTaskTab(id);
+            panel.createStatsTab(id);
+            panel.createTaskButtons(id);
+        } else
+        {
+            tasks = tasks.map(function (data) {
+                var task = new Task();
+                task.setState(data);
+                return task;
+            });
+
+            tasks.sort(function (task1, task2) {
+                if (task1.dueDate < task2.dueDate)
+                    return -1;
+
+                if (task1.dueDate > task2.dueDate)
+                    return 1;
+                return 0;
+            });
+            var weeklyTasks = [];
+            tasks.forEach(function (task)
+            {
+                addTask(task);
+            });
+        }
 
         panel.initJqueryTabs();
         //on load, the first row table should be selected

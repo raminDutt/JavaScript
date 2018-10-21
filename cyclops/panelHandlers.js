@@ -30,7 +30,7 @@ var panelHandlers = (function () {
             activate: function (event, ui) {
                 var id = $(ui.newTab).children().first().attr("href").slice(6);
                 var taskTabSelector = "[id=weekTaskLink-" + id + "]";
-                panel.setSelectedRow($("#weekTaskTable-"+id+" tr").eq(1));
+                panel.setSelectedRow($("#weekTaskTable-" + id + " tr").eq(1));
                 $(taskTabSelector).click();
             }
         });
@@ -54,18 +54,17 @@ var panelHandlers = (function () {
 
     var initEditTaskButtonHandler = function ()
     {
-        $("[id|=editButton").click(function ()
-        {
+        $(document).on("click", "[id|='editButton']", (function () {
             controller.openEditTaskDialogueBox();
-        });
+        }));
     };
 
     var initDeleteTaskButtonHandler = function ()
     {
-        $("[id|=deleteButton").click(function ()
-        {
-            console.log($(this).attr("id"));
-        });
+        $(document).on("click", "[id|='deleteButton']", (function () {
+            controller.openEditTaskDialogueBox();
+        }));
+
     };
 
 
