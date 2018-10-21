@@ -2,23 +2,23 @@
 var panel = (function () {
 
     var selectedRow;
-    var createEditButton = function (id)
+    var createEditButton = function (tabId)
     {
-        var editButton = "editButton-" + id;
+        var editButton = "editButton-" + tabId;
         var editButtonHtml = "<button id=" + editButton + ">Edit</button>";
-        $("#taskButtons-" + id).html(editButtonHtml);
+        $("#taskButtons-" + tabId).html(editButtonHtml);
         $("#" + editButton).button({
             icon: "ui-icon-pencil",
             showLabel: false
         });
     };
 
-    var createDeleteButton = function (id)
+    var createDeleteButton = function (tabId)
     {
-        var deleteButton = "deleteButton-" + id;
+        var deleteButton = "deleteButton-" + tabId;
         var deleteButtonHtml = "<button id=" + deleteButton
                 + ">Delete</button>";
-        $("#taskButtons-" + id).children().last().after(deleteButtonHtml);
+        $("#taskButtons-" + tabId).children().last().after(deleteButtonHtml);
         $("#" + deleteButton).button({
             icon: "ui-icon-trash",
             showLabel: false
@@ -26,29 +26,83 @@ var panel = (function () {
     };
 
     return {
-        nextId: function () {
-            var nextId = $("#tabs > div").map(function () {
-                var id = $(this).attr("id");
-                var seq = parseInt(id.slice(5, id.length))
-                return seq;
-            }).get().reduce(function (max, currentValue) {
-                return max > currentValue ? max : currentValue;
-            },0) + 1;
-            return nextId;
+        addTask(task, tabId)
+        {
+            var selector = "#weekTaskTable-" + tabId + " tr";
+            var rowHTML = "<tr id=taskId-" + task.taskId + ">";
+            rowHTML += "<td>" + task.name + "</td>";
+            rowHTML += "<td>" + task.dueDate + "</td>";
+            rowHTML += "<td>" + task.numberOfPages + "</td>";
+            rowHTML += "<td>" + task.rate + "</td>";
+            rowHTML += "<td>" + task.hours + "</td>";
+            rowHTML += "<td>" + task.status + "</td>";
+            rowHTML += "</tr>"
+            $(selector).last().after(rowHTML);
+        },
+        activateWeekTab(tabId)
+        {
+            var weekTabSelector = "#week";
+            weekTabSelector = "[href=" + $.escapeSelector(weekTabSelector)
+                    + "-" + tabId + "]";
+            $(weekTabSelector).click();
+
         },
         createPanel: function (selector) {
             var panelHtml = "<div id=\"tabs\"></div>";
             panelHtml += "<div class=\"clear\"></div>";
             selector.children().last().after(panelHtml);
         },
-        createWeekTab: function (dueWeekDay, id)
+        createStatsTab: function (tabId) {
+
+            var statTabHtmlLink =
+                    "<li><a id= \"weekStatsLink-" + tabId
+                    + "\" href=\"#weekStatsLink-"
+                    + tabId + "\">Week Stats</a></li>";
+
+            var statTabHtmlTable = "<div id=\"weekStatsTable-" + tabId + "\">";
+            statTabHtmlTable +=
+                    "<table><tr><th>Week</th><th>Capacity</th><th>Total Work Done</th>"
+                    + "<th>Productivity</th></tr></table></div>";
+            $("#week-" + tabId + " ul").children().after(statTabHtmlLink);
+            $("#week-" + tabId).children().last().after(statTabHtmlTable);
+
+        },
+        createTaskButtons: function (tabId)
+        {
+            var taskButtons = "taskButtons-" + tabId;
+            var taskButtonsDivHtml = "<div id=" + taskButtons
+                    + "></div>";
+            $("#week-" + tabId).children().first().after(taskButtonsDivHtml);
+            createEditButton(tabId);
+            createDeleteButton(tabId);
+        },
+        createTaskTab: function (tabId)
+        {
+            var taskTabHtmlLink =
+                    "<div id=\"taskAndStatLinks-" + tabId
+                    + "\"><ul><li><a id= \"weekTaskLink-" + tabId
+                    + "\" href=\"#weekTaskLink-"
+                    + tabId
+                    + "\">Tasks</a></li></ul></div>";
+            var taskTabHtmlTable = "<div id=\"weekTaskTable-" + tabId + "\">";
+            taskTabHtmlTable +=
+                    "<table id=\"t01\"><tr><th>TaskName</th><th>Due Date</th>"
+                    + "<th>Number of Pages</th><th>Rate (pages/hr)</th><th>Hours</th><th>Status</th></tr></table></div>";
+
+            $("#week-" + tabId).html(taskTabHtmlLink);
+            $("#week-" + tabId).children().last().after(taskTabHtmlTable);
+            //$("[id|=weekTaskTable-" + id + "]").removeClass("hide");
+            //$("[id|=weekTaskLink-" + id + "]").addClass("active");
+
+        },
+        createWeekTab: function (dueWeekDay, tabId)
         {
 
-            var htmlLink = "<li><a href=\"#week-" + id + "\">"
+            var htmlLink = "<li><a href=\"#week-" + tabId + "\">"
                     + dueWeekDay.toDateString()
                     + "</a></li>";
 
-            var html = "<div id=\"week-" + id + "\"></div>";
+            var html = "<div id=\"week-" + tabId + "\"></div>";
 
 
 
@@ -113,48 +167,9 @@ var panel = (function () {
             $("#tabs > div:last").after(html);
 
         },
-        createTaskTab: function (id)
+        getSelectedRow()
         {
-            var taskTabHtmlLink =
-                    "<div id=\"taskAndStatLinks-" + id
-                    + "\"><ul><li><a id= \"weekTaskLink-" + id
-                    + "\" href=\"#weekTaskLink-"
-                    + id
-                    + "\">Tasks</a></li></ul></div>";
-            var taskTabHtmlTable = "<div id=\"weekTaskTable-" + id + "\">";
-            taskTabHtmlTable +=
-                    "<table id=\"t01\"><tr><th>TaskName</th><th>Due Date</th>"
-                    + "<th>Number of Pages</th><th>Rate (pages/hr)</th><th>Hours</th><th>Status</th></tr></table></div>";
-
-            $("#week-" + id).html(taskTabHtmlLink);
-            $("#week-" + id).children().last().after(taskTabHtmlTable);
-            //$("[id|=weekTaskTable-" + id + "]").removeClass("hide");
-            //$("[id|=weekTaskLink-" + id + "]").addClass("active");
-
-        },
-        createStatsTab: function (id) {
-
-            var statTabHtmlLink =
-                    "<li><a id= \"weekStatsLink-" + id
-                    + "\" href=\"#weekStatsLink-"
-                    + id + "\">Week Stats</a></li>";
-
-            var statTabHtmlTable = "<div id=\"weekStatsTable-" + id + "\">";
-            statTabHtmlTable +=
-                    "<table><tr><th>Week</th><th>Capacity</th><th>Total Work Done</th>"
-                    + "<th>Productivity</th></tr></table></div>";
-            $("#week-" + id + " ul").children().after(statTabHtmlLink);
-            $("#week-" + id).children().last().after(statTabHtmlTable);
-
-        },
-        createTaskButtons: function (id)
-        {
-            var taskButtons = "taskButtons-" + id;
-            var taskButtonsDivHtml = "<div id=" + taskButtons
-                    + "></div>";
-            $("#week-" + id).children().first().after(taskButtonsDivHtml);
-            createEditButton(id);
-            createDeleteButton(id);
+            return selectedRow;
         },
         initJqueryTabs: function () {
 
@@ -162,9 +177,6 @@ var panel = (function () {
                     "ui-tabs-vertical ui-helper-clearfix");
             $("#tabs li").removeClass("ui-corner-top").addClass(
                     "ui-corner-left");
-        },
-        reloadTabs: function () {
-            $("#tabs").tabs("refresh");
         },
         isWeekTabAlreadyCreated: function (dueWeekDay)
         {
@@ -188,35 +200,22 @@ var panel = (function () {
                 };
             }
         },
-        
-        addTask(task, id)
-        {
-            var selector = "#weekTaskTable-" + id + " tr";
-            var rowHTML = "<tr>"
-            rowHTML += "<td>" + task.name + "</td>";
-            rowHTML += "<td>" + task.dueDate + "</td>";
-            rowHTML += "<td>" + task.numberOfPages + "</td>";
-            rowHTML += "<td>" + task.rate + "</td>";
-            rowHTML += "<td>" + task.hours + "</td>";
-            rowHTML += "<td>" + task.status + "</td>";
-            rowHTML += "</tr>"
-            $(selector).last().after(rowHTML);
+        nextId: function () {
+            var nextId = $("#tabs > div").map(function () {
+                var id = $(this).attr("id");
+                var seq = parseInt(id.slice(5, id.length))
+                return seq;
+            }).get().reduce(function (max, currentValue) {
+                return max > currentValue ? max : currentValue;
+            }, 0) + 1;
+            return nextId;
         },
-        activateWeekTab(id)
-        {
-            var weekTabSelector = "#week";
-            weekTabSelector = "[href=" + $.escapeSelector(weekTabSelector)
-                    + "-" + id + "]";
-            $(weekTabSelector).click();
-
+        reloadTabs: function () {
+            $("#tabs").tabs("refresh");
         },
         setSelectedRow(row)
         {
             selectedRow = row;
-        },
-        getSelectedRow()
-        {
-            return selectedRow;
         }
     }
 })();

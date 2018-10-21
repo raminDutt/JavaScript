@@ -22,44 +22,39 @@ var controller = (function () {
         taskFormInput.load(selector);
     };
 
-    var addTask = function (task) {
+    var addTaskToPanel = function (task) {
+   
+
         var dueWeekDay = calculateDueWeek(task.dueDate);
         var answer = panel.isWeekTabAlreadyCreated(dueWeekDay);
-        var id = answer.id;
+        var tabId = answer.id;
         if (!answer.isPresent)
         {
-            id = panel.nextId();
-            panel.createWeekTab(dueWeekDay, id);
-            panel.createTaskTab(id);
-            panel.createStatsTab(id);
-            panel.createTaskButtons(id);
+            tabId = panel.nextId();
+            panel.createWeekTab(dueWeekDay, tabId);
+            panel.createTaskTab(tabId);
+            panel.createStatsTab(tabId);
+            panel.createTaskButtons(tabId);
         }
 
-        panel.addTask(task, id);
-        return id;
+        panel.addTask(task, tabId);
+        return tabId;
 
     };
     var loadPanel = function (selector)
     {
-        var tasks = persistenceDAO.getAllTasks();
-
+        var tasks = Task.getTasks();
         panel.createPanel(selector);
         if (tasks.length === 0)
         {
             var dueWeekDay = calculateDueWeek(new Date());
-            id = panel.nextId();
-            panel.createWeekTab(dueWeekDay, id);
-            panel.createTaskTab(id);
-            panel.createStatsTab(id);
-            panel.createTaskButtons(id);
+            var tabId = panel.nextId();
+            panel.createWeekTab(dueWeekDay, tabId);
+            panel.createTaskTab(tabId);
+            panel.createStatsTab(tabId);
+            panel.createTaskButtons(tabId);
         } else
         {
-            tasks = tasks.map(function (data) {
-                var task = new Task();
-                task.setState(data);
-                return task;
-            });
-
             tasks.sort(function (task1, task2) {
                 if (task1.dueDate < task2.dueDate)
                     return -1;
@@ -71,14 +66,14 @@ var controller = (function () {
             var weeklyTasks = [];
             tasks.forEach(function (task)
             {
-                addTask(task);
+                addTaskToPanel(task);
             });
         }
 
         panel.initJqueryTabs();
-        //on load, the first row table should be selected
-        var id = $("#tabs ul li a").attr("href").slice(6);
-        panel.setSelectedRow($("#weekTaskTable-" + id + " tr").eq(1));
+        //on load, the first week tab, task tab and first row table should be selected
+        var weekTaskTableId = $("#tabs ul li a").attr("href").slice(6);
+        panel.setSelectedRow($("#weekTaskTable-" + weekTaskTableId + " tr").eq(1));
 
     };
 
@@ -90,11 +85,11 @@ var controller = (function () {
             loadTaskFormEditDialogueBox(selector);
             return this;
         },
-        addTask: function (task) {
-            var id = addTask(task);
+        addTask: function (data) {
+            var task = Task.create(data);
+            var tabId = addTaskToPanel(task);
             panel.reloadTabs();
-            panel.activateWeekTab(id);
-            task.save();
+            panel.activateWeekTab(tabId);
             return this;
         },
         editTask: function ()

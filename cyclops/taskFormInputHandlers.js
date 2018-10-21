@@ -48,22 +48,22 @@ var taskFormInputHandlers = (function () {
         $("#add_task").click(function () {
             if (!taskFormInput.validateInput())
                 return;
-            var task = new Task();
-            task.name = $("#task").val();
-            task.dueDate = $("#due_date").val();
-            task.velocity =
-                    $("#velocity :selected")[0].value;
-            if (task.velocity === "task_hours")
-            {
-                task.hours = $("#taskHours").val();
-            }
-
-            if (task.velocity === "task_rate")
-            {
-                task.numberOfPages = $("#numberOfPages").val();
-                task.rate = $("#taskRate").val();
-            }
-            controller.addTask(task);
+            var taskData = [];
+            taskData["name"] = $("#task").val();
+            taskData["dueDate"] = $("#due_date").val();
+            //Getting the calue of teh option
+            taskData["velocity"] = $("#velocity :selected")[0].value;
+            //getting the text in the option
+            /*
+            console.log($("#velocity :selected")[0].value);
+            console.log($("#velocity :selected")[0].firstChild.nodeValue);
+            console.log($($("#velocity :selected")[0]).text());
+            */
+            taskData["hours"] = $("#taskHours").val() || "0";
+            taskData["numberOfPages"] = $("#numberOfPages").val() || "0";
+            taskData["rate"] = $("#taskRate").val() || "0";
+            taskData["status"] = "Not Started";
+            controller.addTask(taskData);
         });
     }
 
