@@ -50,7 +50,7 @@ var taskFormInput = (function () {
             taskFormHtml +=
                     "<input type=\"button\" name=\"clear_tasks\" id=\"clear_tasks\" value=\"Clear Tasks\">";
             taskFormHtml += "</div>"
-            selector.last().after(taskFormHtml);
+            selector.children().last().after(taskFormHtml);
 
         },
         validateInput: function () {

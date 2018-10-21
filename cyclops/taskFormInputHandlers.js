@@ -9,7 +9,7 @@ var taskFormInputHandlers = (function () {
             firstDay: 1
         });
     }
-    var initTaskValueSelectionBox = function ()
+    var initTaskValueSelectionBoxHandler = function ()
     {
         $("#velocity").change(function () {
             $("#velocity").prev().html("");
@@ -43,7 +43,7 @@ var taskFormInputHandlers = (function () {
             $("#valueSelection").html(html);
         });
     }
-    var initAddTaskButton = function ()
+    var initAddTaskButtonHandler = function ()
     {
         $("#add_task").click(function () {
             if (!taskFormInput.validateInput())
@@ -72,8 +72,8 @@ var taskFormInputHandlers = (function () {
         initializeHandlers: function ()
         {
             initDueDatePicker();
-            initTaskValueSelectionBox();
-            initAddTaskButton();
+            initTaskValueSelectionBoxHandler();
+            initAddTaskButtonHandler();
         }
     };
 })();

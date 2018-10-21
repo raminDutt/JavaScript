@@ -5,8 +5,7 @@ var bootstrap = (function(){
     {
         taskFormInputHandlers.initializeHandlers();
         panelHandlers.initializeHandlers();
-        
-
+        taskFormEditDialogueHandlers.initializeHandlers();
     }
     var load = function ($)
     {

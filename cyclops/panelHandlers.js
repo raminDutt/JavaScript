@@ -1,29 +1,45 @@
 "use-strict"
 var panelHandlers = (function () {
 
-    var initTaskTab = function ()
+    var initTaskTabHandler = function ()
     {
-        $("[id|='weekTasksLink']").click(function () {
+        $(document).on("click", "[id|='weekTaskLink']", (function () {
             $("[id|='weekTaskTable']").removeClass("hide");
+            $("[id|='weekStatsLink']").removeClass("active");
             $("[id|='weekStatsTable']").addClass("hide");
-        });
+            $("[id|='weekTaskLink']").addClass("active");
+        }));
         //Initial Load should display only week stats of latest week
         $("[id|='weekTaskTable']").removeClass("hide");
-    }
+        $("[id|='weekTaskLink']").addClass("active");
+    };
 
-    var initStatTab = function ()
+    var initStatTabHandler = function ()
     {
-        $("[id|='weekStatsLink']").click(function () {
+        $(document).on("click", "[id|='weekStatsLink']", (function () {
             $("[id|='weekStatsTable']").removeClass("hide");
+            $("[id|='weekTaskLink']").removeClass("active");
             $("[id|='weekTaskTable']").addClass("hide");
-        });
+            $("[id|='weekStatsLink']").addClass("active");
+        }));
         $("[id|='weekStatsTable']").addClass("hide");
-    }
-
-    var initTabTable = function ()
+    };
+    var initActivateTabHandler = function ()
     {
-        $("tr").click(function ()
+        $("#tabs").tabs({
+            activate: function (event, ui) {
+                var id = $(ui.newTab).children().first().attr("href").slice(6);
+                var taskTabSelector = "[id=weekTaskLink-" + id + "]";
+                panel.setSelectedRow($("#weekTaskTable-"+id+" tr").eq(1));
+                $(taskTabSelector).click();
+            }
+        });
+    };
+    var initTabTableHandler = function ()
+    {
+        $(document).on("click", "tr", (function ()
         {
+            panel.setSelectedRow(this);
             var isRowSelected = $(this).attr("class") || "";
             if (isRowSelected === "")
             {
@@ -33,14 +49,37 @@ var panelHandlers = (function () {
             {
                 $(this).toggleClass("rowSelected");
             }
+        }));
+    };
+
+    var initEditTaskButtonHandler = function ()
+    {
+        $("[id|=editButton").click(function ()
+        {
+            controller.openEditTaskDialogueBox();
         });
-    }
+    };
+
+    var initDeleteTaskButtonHandler = function ()
+    {
+        $("[id|=deleteButton").click(function ()
+        {
+            console.log($(this).attr("id"));
+        });
+    };
+
+
+
     return {
         initializeHandlers: function ()
         {
-            initTaskTab();
-            initStatTab();
-            initTabTable();
+            initTaskTabHandler();
+            initStatTabHandler();
+            initActivateTabHandler();
+            initTabTableHandler();
+            initEditTaskButtonHandler();
+            initDeleteTaskButtonHandler();
+
         }
     };
 })();
