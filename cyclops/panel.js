@@ -24,12 +24,10 @@ var panel = (function () {
             showLabel: false
         });
     };
-
-    return {
-        addTask(task, tabId)
-        {
-            var selector = "#weekTaskTable-" + tabId + " tr";
-            var rowHTML = "<tr id=taskId-" + task.taskId + ">";
+    
+    var getRowTaskTableHtml = function(task)
+    {
+        var rowHTML = "<tr id=taskId-" + task.taskId + ">";
             rowHTML += "<td>" + task.name + "</td>";
             rowHTML += "<td>" + task.dueDate + "</td>";
             rowHTML += "<td>" + task.numberOfPages + "</td>";
@@ -37,6 +35,13 @@ var panel = (function () {
             rowHTML += "<td>" + task.hours + "</td>";
             rowHTML += "<td>" + task.status + "</td>";
             rowHTML += "</tr>"
+        return rowHTML;
+    }
+    return {
+        addTask(task, tabId)
+        {
+            var selector = "#weekTaskTable-" + tabId + " tr";
+            var rowHTML = getRowTaskTableHtml(task);
             $(selector).last().after(rowHTML);
         },
         activateWeekTab(tabId)
@@ -44,8 +49,8 @@ var panel = (function () {
             var weekTabSelector = "#week";
             weekTabSelector = "[href=" + $.escapeSelector(weekTabSelector)
                     + "-" + tabId + "]";
+            panel.setSelectedRow($("#weekTaskTable-" + tabId + " tr").eq(1));
             $(weekTabSelector).click();
-
         },
         createPanel: function (selector) {
             var panelHtml = "<div id=\"tabs\"></div>";
@@ -213,9 +218,23 @@ var panel = (function () {
         reloadTabs: function () {
             $("#tabs").tabs("refresh");
         },
-        setSelectedRow(row)
+        setSelectedRow: function(row)
         {
             selectedRow = row;
+        },
+        updateTaskTable: function(task)
+        {
+            var rowHtml = getRowTaskTableHtml(task);
+            var taskId = "taskId-"+task.taskId;
+            var previousSibling = $("#"+taskId).prev();
+            $("#"+taskId).remove();
+            previousSibling.after(rowHtml);
+        },
+        removeTaskFromTaskTable: function(task)
+        {
+
+            var taskId = "taskId-"+task.taskId;
+            $("#"+taskId).remove();
         }
     }
 })();

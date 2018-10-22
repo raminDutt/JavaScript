@@ -4,11 +4,13 @@ var taskFormEditDialogueHandlers = (function () {
 
     var editTask = function ()
     {
-        var valid = taskFormEditDialogue.validate();
-        if (valid)
+        var result = taskFormEditDialogue.validate();
+        if (result.status)
         {
+            controller.editTask(result.data);
             taskFormEditDialogue.close();
         }
+        
 
     }
     var initDialogueButtons = function ()

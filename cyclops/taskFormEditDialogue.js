@@ -46,6 +46,7 @@ var taskFormEditDialogue = (function ()
     var numberOfPages = "editNumberOfPages";
     var rate = "editRate";
     var hours = "editHours";
+    var editStatus = "editStatus";
 
     function updateErrorMessage(t) {
         var tips = $(".validateTips");
@@ -120,7 +121,7 @@ var taskFormEditDialogue = (function ()
             formHtml +=
                     "<select name=\"editStatus\" id=\"editStatus\" class=\"text ui-widget-content ui-corner-all\">";
             formHtml +=
-                    "<option value=\"notStarted\" selected>Not Started</option>";
+                    "<option value=\"notStarted\">Not Started</option>";
             formHtml += "<option value=\"inProgress\">In Progress</option>";
             formHtml += "<option value=\"done\">Done</option>";
             formHtml += "</select>"
@@ -135,15 +136,38 @@ var taskFormEditDialogue = (function ()
                 modal: true,
             });
         },
-        open: function (selectedRow)
+        open: function (task)
         {
-            var taskAttributes = $(selectedRow).children().get();
-            $("#editTaskname").attr("value", $(taskAttributes[0]).text());
-            $("#editTaskDueDate").attr("value", $(taskAttributes[1]).text());
-            $("#editNumberOfPages").attr("value", $(taskAttributes[2]).text());
-            $("#editRate").attr("value", $(taskAttributes[3]).text());
-            $("#editHours").attr("value", $(taskAttributes[4]).text());
-            $("#editStatus").attr("value", $(taskAttributes[5]).text());
+            var dueDate_DateObjectFormat = task.dueDate.split("/");
+            var dueDate_inputDateFormat = dueDate_DateObjectFormat[2] + "-"
+                    + dueDate_DateObjectFormat[0] + "-"
+                    + dueDate_DateObjectFormat[1];
+
+            $("#dialog-form form").attr("taskId", task.taskId);
+            $("#editTaskname").attr("value", task.name);
+            $("#editTaskDueDate").attr("value", dueDate_inputDateFormat);
+            $("#editNumberOfPages").attr("value", task.numberOfPages);
+            $("#editRate").attr("value", task.rate);
+            $("#editHours").attr("value", task.hours);
+            $("#editStatus").children().attr("selected", false);
+
+            switch (task.status)
+            {
+                case "Not Started":
+                    $("#editStatus").children().eq(0).attr("selected", true);
+                    break;
+                case "In Progress":
+                    $("#editStatus").children().eq(1).attr("selected", true);
+                    break;
+                case "Done":
+                    $("#editStatus").children().eq(2).attr("selected", true);
+                    break;
+                default:
+                    $("#editStatus").children().eq(0).attr("selected", true);
+
+            }
+
+
             dialog.dialog("open");
         },
         resetForm: function ()
@@ -152,6 +176,7 @@ var taskFormEditDialogue = (function ()
         },
         validate: function ()
         {
+            var data = []
             var fields = this.getAllFieldIds()
             var allFields = $([]).add(fields["name"]).add(
                     fields["numberOfPages"]).add(fields["rate"]).add(
@@ -160,6 +185,7 @@ var taskFormEditDialogue = (function ()
             allFields.removeClass("ui-state-error");
             var valid = true;
             valid = checkLength(fields["name"], "Task Name");
+            valid = checkLength(fields["dueDate"], "Due Date");
             valid = valid && checkLength(fields["numberOfPages"],
                     "Number Of Pages");
             valid = valid && checkRange(fields["numberOfPages"],
@@ -169,10 +195,21 @@ var taskFormEditDialogue = (function ()
             valid = valid && checkLength(fields["hours"], "Hours");
             valid = valid && checkRange(fields["hours"], "Hours", 0);
 
-
-
-
-            return valid;
+            data["taskId"] = $("#dialog-form form").attr("taskId");
+            data["name"] = fields["name"].val();
+            var dueDate_inputDateFormat = fields["dueDate"].val().split("-");
+            var dueDate_DateObjectFormat = dueDate_inputDateFormat[1] + "/"
+                    + dueDate_inputDateFormat[2] + "/"
+                    + dueDate_inputDateFormat[0];
+            data["dueDate"] = dueDate_DateObjectFormat;
+            data["numberOfPages"] = fields["numberOfPages"].val();
+            data["rate"] = fields["rate"].val();
+            data["hours"] = fields["hours"].val();
+            data["status"] = $("#" + editStatus + " :selected").text();
+            return {
+                status: valid,
+                data: data
+            }
         }
 
     }

@@ -12,6 +12,12 @@ var controller = (function () {
         return dueWeek;
     };
 
+    var getSelectedRowTaskId = function ()
+    {
+        var selectedRow = panel.getSelectedRow();
+        var taskId = $(selectedRow).attr("id").slice(7);
+        return taskId;
+    }
     var loadTaskFormEditDialogueBox = function (selector)
     {
         taskFormEditDialogue.load(selector);
@@ -23,8 +29,6 @@ var controller = (function () {
     };
 
     var addTaskToPanel = function (task) {
-   
-
         var dueWeekDay = calculateDueWeek(task.dueDate);
         var answer = panel.isWeekTabAlreadyCreated(dueWeekDay);
         var tabId = answer.id;
@@ -73,9 +77,11 @@ var controller = (function () {
         panel.initJqueryTabs();
         //on load, the first week tab, task tab and first row table should be selected
         var weekTaskTableId = $("#tabs ul li a").attr("href").slice(6);
-        panel.setSelectedRow($("#weekTaskTable-" + weekTaskTableId + " tr").eq(1));
+        panel.setSelectedRow($("#weekTaskTable-" + weekTaskTableId + " tr").eq(
+                1));
 
     };
+
 
     return {
         load: function (selector)
@@ -90,17 +96,33 @@ var controller = (function () {
             var tabId = addTaskToPanel(task);
             panel.reloadTabs();
             panel.activateWeekTab(tabId);
+
             return this;
         },
-        editTask: function ()
+        editTask: function (data)
         {
+            var task = Task.getTask(data.taskId);
+            var old = calculateDueWeek(task.dueDate);
+            task.save(data);
+            var newDueDate = calculateDueWeek(task.dueDate);
+            if (old.getTime() === newDueDate.getTime())
+            {
+                panel.updateTaskTable(task);
+            } else
+            {
+                panel.removeTaskFromTaskTable(task);
+                addTaskToPanel(task);
+                panel.reloadTabs();
+            }
 
         },
         openEditTaskDialogueBox: function ()
         {
-            var selectedRow = panel.getSelectedRow();
-            taskFormEditDialogue.open(selectedRow);
-        }
+            var taskId = getSelectedRowTaskId();
+            var task = Task.getTask(taskId);
+            taskFormEditDialogue.open(task);
+            return taskId;
+        },
     };
 })();
 

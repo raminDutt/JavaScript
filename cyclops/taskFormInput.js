@@ -65,25 +65,33 @@ var taskFormInput = (function () {
                         !== "task_rate") ? false : true;
             }) && error;
 
-            var isNumber = function (id)
+            var isPositiveNumber = function (id)
             {
-                return !isNaN($(id).val());
+                var value = $(id).val();
+                if (isNaN(value))
+                    return false;
+                
+                if (value < 0)
+                    return false;
+                return true;
             }
 
             if (velocity === "task_hours")
             {
-                error = validate("taskHours") ? validate("taskHours", isNumber,
-                        "Must be a number") && error : false;
+                error = validate("taskHours") ? validate("taskHours",
+                        isPositiveNumber,
+                        "Must be a positive number") && error : false;
             }
 
             if (velocity === "task_rate")
             {
                 error = validate("numberOfPages") ? validate("numberOfPages",
-                        isNumber,
-                        "Must be a number") && error : false;
+                        isPositiveNumber,
+                        "Must be a positive number") && error : false;
 
-                error = validate("taskRate") ? validate("taskRate", isNumber,
-                        "Must be a number") && error : false;
+                error = validate("taskRate") ? validate("taskRate",
+                        isPositiveNumber,
+                        "Must be a positive number") && error : false;
             }
             return error;
         }

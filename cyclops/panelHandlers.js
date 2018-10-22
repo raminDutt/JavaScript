@@ -1,29 +1,6 @@
 "use-strict"
 var panelHandlers = (function () {
 
-    var initTaskTabHandler = function ()
-    {
-        $(document).on("click", "[id|='weekTaskLink']", (function () {
-            $("[id|='weekTaskTable']").removeClass("hide");
-            $("[id|='weekStatsLink']").removeClass("active");
-            $("[id|='weekStatsTable']").addClass("hide");
-            $("[id|='weekTaskLink']").addClass("active");
-        }));
-        //Initial Load should display only week stats of latest week
-        $("[id|='weekTaskTable']").removeClass("hide");
-        $("[id|='weekTaskLink']").addClass("active");
-    };
-
-    var initStatTabHandler = function ()
-    {
-        $(document).on("click", "[id|='weekStatsLink']", (function () {
-            $("[id|='weekStatsTable']").removeClass("hide");
-            $("[id|='weekTaskLink']").removeClass("active");
-            $("[id|='weekTaskTable']").addClass("hide");
-            $("[id|='weekStatsLink']").addClass("active");
-        }));
-        $("[id|='weekStatsTable']").addClass("hide");
-    };
     var initActivateTabHandler = function ()
     {
         $("#tabs").tabs({
@@ -34,22 +11,6 @@ var panelHandlers = (function () {
                 $(taskTabSelector).click();
             }
         });
-    };
-    var initTabTableHandler = function ()
-    {
-        $(document).on("click", "tr", (function ()
-        {
-            panel.setSelectedRow(this);
-            var isRowSelected = $(this).attr("class") || "";
-            if (isRowSelected === "")
-            {
-                $("tr").removeClass("rowSelected");
-                $(this).addClass("rowSelected");
-            } else
-            {
-                $(this).toggleClass("rowSelected");
-            }
-        }));
     };
 
     var initEditTaskButtonHandler = function ()
@@ -67,8 +28,45 @@ var panelHandlers = (function () {
 
     };
 
-
-
+    var initStatTabHandler = function ()
+    {
+        $(document).on("click", "[id|='weekStatsLink']", (function () {
+            $("[id|='weekStatsTable']").removeClass("hide");
+            $("[id|='weekTaskLink']").removeClass("active");
+            $("[id|='weekTaskTable']").addClass("hide");
+            $("[id|='weekStatsLink']").addClass("active");
+        }));
+        $("[id|='weekStatsTable']").addClass("hide");
+    };
+    var initTaskTabHandler = function ()
+    {
+        $(document).on("click", "[id|='weekTaskLink']", (function () {
+            $("[id|='weekTaskTable']").removeClass("hide");
+            $("[id|='weekStatsLink']").removeClass("active");
+            $("[id|='weekStatsTable']").addClass("hide");
+            $("[id|='weekTaskLink']").addClass("active");
+        }));
+        //Initial Load should display only week stats of latest week
+        $("[id|='weekTaskTable']").removeClass("hide");
+        $("[id|='weekTaskLink']").addClass("active");
+    };
+    var initTabTableHandler = function ()
+    {
+        $(document).on("click", "tr", (function ()
+        {
+            panel.setSelectedRow(this);
+            var isRowSelected = $(this).attr("class") || "";
+            if (isRowSelected === "")
+            {
+                $("tr").removeClass("rowSelected");
+                $(this).addClass("rowSelected");
+            } else
+            {
+                $(this).toggleClass("rowSelected");
+            }
+        }));
+    };
+    
     return {
         initializeHandlers: function ()
         {
