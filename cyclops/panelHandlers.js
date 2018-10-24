@@ -23,7 +23,7 @@ var panelHandlers = (function () {
     var initDeleteTaskButtonHandler = function ()
     {
         $(document).on("click", "[id|='deleteButton']", (function () {
-            controller.openEditTaskDialogueBox();
+            controller.deleteTask();
         }));
 
     };
@@ -54,7 +54,7 @@ var panelHandlers = (function () {
     {
         $(document).on("click", "tr", (function ()
         {
-            panel.setSelectedRow(this);
+            panel.setSelectedRow($(this));
             var isRowSelected = $(this).attr("class") || "";
             if (isRowSelected === "")
             {

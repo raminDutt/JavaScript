@@ -220,6 +220,7 @@ var panel = (function () {
         },
         setSelectedRow: function(row)
         {
+            //Storing a JQuery object of teh selected row
             selectedRow = row;
         },
         updateTaskTable: function(task)
@@ -230,10 +231,9 @@ var panel = (function () {
             $("#"+taskId).remove();
             previousSibling.after(rowHtml);
         },
-        removeTaskFromTaskTable: function(task)
+        removeTaskFromTaskTable: function(taskId)
         {
-
-            var taskId = "taskId-"+task.taskId;
+            var taskId = "taskId-"+taskId;
             $("#"+taskId).remove();
         }
     }

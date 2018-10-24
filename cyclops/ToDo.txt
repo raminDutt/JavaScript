@@ -1,0 +1,8 @@
+*delete (done)
+*stat calculation (missing columns in task (estimated hours, hours done, hours remaining) and stats)
+*sorting tasks by status-due date-name
+*changing form edit dialog input type date to jquerry datepicker
+*create a seeting menu: {capacity, datepicker option selection (first day)}
+*consolidating stat and week tabs
+*minimize js
+change seed max value for now to 1

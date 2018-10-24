@@ -1,33 +1,6 @@
 "use strict";
 var controller = (function () {
 
-    var calculateDueWeek = function (dueDate)
-    {
-        //TODO: set option in plugin to modify first day
-        //var firstDay = $( "#due_date" ).datepicker( "option", "firstDay" );
-        var dD = new Date(dueDate);
-        var dueWeek = new Date(dD);
-
-        dueWeek.setDate(dueWeek.getDate() + (7 - dueWeek.getDay()) % 7);
-        return dueWeek;
-    };
-
-    var getSelectedRowTaskId = function ()
-    {
-        var selectedRow = panel.getSelectedRow();
-        var taskId = $(selectedRow).attr("id").slice(7);
-        return taskId;
-    }
-    var loadTaskFormEditDialogueBox = function (selector)
-    {
-        taskFormEditDialogue.load(selector);
-    };
-
-    var loadTaskFormInput = function (selector)
-    {
-        taskFormInput.load(selector);
-    };
-
     var addTaskToPanel = function (task) {
         var dueWeekDay = calculateDueWeek(task.dueDate);
         var answer = panel.isWeekTabAlreadyCreated(dueWeekDay);
@@ -45,6 +18,23 @@ var controller = (function () {
         return tabId;
 
     };
+    var calculateDueWeek = function (dueDate)
+    {
+        //TODO: set option in plugin to modify first day
+        //var firstDay = $( "#due_date" ).datepicker( "option", "firstDay" );
+        var dD = new Date(dueDate);
+        var dueWeek = new Date(dD);
+
+        dueWeek.setDate(dueWeek.getDate() + (7 - dueWeek.getDay()) % 7);
+        return dueWeek;
+    };
+
+    var getSelectedRowTaskId = function ()
+    {
+        var selectedRow = panel.getSelectedRow();
+        var taskId = $(selectedRow).attr("id").slice(7);
+        return taskId;
+    }
     var loadPanel = function (selector)
     {
         var tasks = Task.getTasks();
@@ -82,7 +72,15 @@ var controller = (function () {
 
     };
 
+    var loadTaskFormEditDialogueBox = function (selector)
+    {
+        taskFormEditDialogue.load(selector);
+    };
 
+    var loadTaskFormInput = function (selector)
+    {
+        taskFormInput.load(selector);
+    };
     return {
         load: function (selector)
         {
@@ -110,11 +108,11 @@ var controller = (function () {
                 panel.updateTaskTable(task);
             } else
             {
-                panel.removeTaskFromTaskTable(task);
+                panel.removeTaskFromTaskTable(task.taskId);
                 addTaskToPanel(task);
                 panel.reloadTabs();
             }
-
+            return this;
         },
         openEditTaskDialogueBox: function ()
         {
@@ -123,6 +121,14 @@ var controller = (function () {
             taskFormEditDialogue.open(task);
             return taskId;
         },
+        deleteTask: function ()
+        {
+            var taskId = getSelectedRowTaskId();
+            Task.delete(taskId);
+            panel.removeTaskFromTaskTable(taskId);
+            panel.reloadTabs();
+            //update UI
+        }
     };
 })();
 

@@ -39,6 +39,18 @@ var taskDAO = (function () {
                         + encodedString;
             }
         },
+        delete: function(taskId)
+        {
+            console.log("Before:  =  " + localStorage.taskManagerTasks);
+            var encodedTasks = localStorage.taskManagerTasks;
+            var updatedEncodedTasks = encodedTasks.split("|").filter(function(encodedTask)
+            {
+                var id = "taskId=" + taskId + "~";
+                return encodedTask.includes(id) ? false: true;
+            }).join("|");
+            localStorage.taskManagerTasks = updatedEncodedTasks;
+            console.log("After:  =  " + localStorage.taskManagerTasks );
+        },
         getTask: function (taskId) {
             var encodedTasks = localStorage.taskManagerTasks.split("|").filter(
                     function (encodedTask) {
@@ -75,9 +87,9 @@ var taskDAO = (function () {
         update: function (data)
         {
             var encodedData = encodeData(data);
-            console.log("data taskId=" + data["taskId"]);
-            console.log("data= " + data.toString());
-            console.log("encodedData= "+encodedData);
+           // console.log("data taskId=" + data["taskId"]);
+           // console.log("data= " + data.toString());
+           // console.log("encodedData= "+encodedData);
             var encodedTasks = localStorage.taskManagerTasks;
             var updatedEncodedTask = encodedTasks.split("|").map(function (
                     encodedTask) {
@@ -86,8 +98,8 @@ var taskDAO = (function () {
             }).join("|");
 
             localStorage.taskManagerTasks = updatedEncodedTask;
-            console.log("encodedTasks=" + encodedTasks);
-            console.log("updatedEncodedTask=" + updatedEncodedTask);
+            //console.log("encodedTasks=" + encodedTasks);
+            //console.log("updatedEncodedTask=" + updatedEncodedTask);
 
         }
     }

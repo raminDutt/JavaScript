@@ -5,7 +5,8 @@ var Task = (function () {
     {
         this.taskId = id;
     };
-
+    
+    //TaskObject public apis
     TaskObject.prototype.getState = function ()
     {
         var data = [];
@@ -44,10 +45,14 @@ var Task = (function () {
 
     TaskObject.prototype.save = function (data)
     {
-        console.log(data);
         this.load(data);
         var data2 = this.getState()
         taskDAO.update(data2);
+    };
+    
+    TaskObject.prototype.delete = function ()
+    {
+        taskDAO.delete(this.taskId);
     };
 
     var sequencer = (function () {
@@ -77,7 +82,13 @@ var Task = (function () {
         taskDAO.create(task.getState());
         data["taskId"] = task.taskId;
         return task;
-    }
+    };
+    
+    var deleteTask = function(taskId)
+    {
+        taskDAO.delete(taskId);
+    };
+    
     var getTask = function (taskId)
     {
         var data = taskDAO.getTask(taskId);
@@ -95,9 +106,11 @@ var Task = (function () {
             return task;
         });
         return datas;
-    }
+    };
     return {
+        //Task static apis
         create: create,
+        delete: deleteTask,
         getTasks: getTasks,
         getTask: getTask
     };
